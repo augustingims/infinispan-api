@@ -1,10 +1,7 @@
 package com.techops.infinispan.api.application.rest;
 
 import com.techops.infinispan.api.application.service.ICacheService;
-import com.techops.infinispan.api.domain.model.PdmModel;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.info.License;
+import com.techops.infinispan.api.domain.PdmModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/cache")
+@RequestMapping("/cache-proto")
 public class CacheResource implements ICacheResource<PdmModel, PdmModel>{
 
     private final ICacheService<PdmModel, PdmModel> iCacheService;

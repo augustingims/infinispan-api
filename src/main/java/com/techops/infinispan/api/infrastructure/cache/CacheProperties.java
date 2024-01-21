@@ -12,4 +12,11 @@ public class CacheProperties {
     private String fcaCacheParty;
     private String fcpfaCacheParty;
     private String myCache;
+
+    private String host;
+    private Integer port;
+    private String username;
+    private String password;
+    private String marshaller;
+    private Integer maxRetries;
 }

@@ -1,46 +1,45 @@
 package com.techops.infinispan.api.infrastructure.config;
 
-import com.techops.infinispan.api.domain.model.PdmModel;
 import com.techops.infinispan.api.infrastructure.cache.CacheProperties;
 import lombok.RequiredArgsConstructor;
-import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
-import org.infinispan.commons.marshall.ProtoStreamMarshaller;
-import org.infinispan.spring.starter.remote.InfinispanRemoteCacheCustomizer;
+import org.infinispan.client.hotrod.configuration.ClientIntelligence;
+import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 @RequiredArgsConstructor
 public class CacheConfig {
-    
-    private final RemoteCacheManager remoteCacheManager;
 
     private final CacheProperties cacheProperties;
-
-    @Bean("myCache")
-    public RemoteCache<String, PdmModel> myCache(){
-        return remoteCacheManager.getCache(cacheProperties.getMyCache());
+    
+    @Bean
+    @Lazy
+    public RemoteCacheManager remoteCacheManager() {
+        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+    configurationBuilder
+        .clientIntelligence(ClientIntelligence.BASIC)
+        .addServer()
+        .host(cacheProperties.getHost())
+        .port(cacheProperties.getPort())
+        .security()
+        .authentication()
+        .username(cacheProperties.getUsername())
+        .password(cacheProperties.getPassword())
+        .maxRetries(cacheProperties.getMaxRetries())
+        .marshaller(cacheProperties.getMarshaller());
+        return new RemoteCacheManager(configurationBuilder.build(), true);
     }
 
-//    @Bean
-//    @Order(Ordered.HIGHEST_PRECEDENCE)
-//    public InfinispanRemoteCacheCustomizer remoteCacheCustomizer() {
-//        return b -> {
-//            b.remoteCache("pdm-fca-party").marshaller(ProtoStreamMarshaller.class);
-//            b.remoteCache("pdm-fcpfa-party").marshaller(ProtoStreamMarshaller.class);
-//        };
-//    }
-
 //    @Bean("pdmFcaParty")
-//    public RemoteCache<String, Object> pdmFcaParty(){
+//    public RemoteCache<String, Object> pdmFcaParty(RemoteCacheManager remoteCacheManager){
 //        return remoteCacheManager.getCache(cacheProperties.getFcaCacheParty());
 //    }
 //
 //    @Bean("pdmFcpfaParty")
-//    public RemoteCache<String, Object> pdmFcpfaParty(){
+//    public RemoteCache<String, Object> pdmFcpfaParty(RemoteCacheManager remoteCacheManager){
 //        return remoteCacheManager.getCache(cacheProperties.getFcpfaCacheParty());
 //    }
 }

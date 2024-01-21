@@ -1,15 +1,16 @@
-package com.techops.infinispan.api.domain.proto;
+package com.techops.infinispan.api.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.infinispan.api.annotations.indexing.Indexed;
+import org.infinispan.protostream.annotations.ProtoDoc;
 import org.infinispan.protostream.annotations.ProtoField;
 
+import java.io.Serializable;
 import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
-@Indexed
-public class IPdmModel {
+@ProtoDoc("@Indexed")
+public class PdmModel implements Serializable {
     private String parentId;
     private String childId;
     private String objectVersion;
@@ -17,6 +18,7 @@ public class IPdmModel {
     private String classId;
 
     @ProtoField(number = 1, required = true)
+    @ProtoDoc("@Field(index=Index.YES, analyze = Analyze.YES, store = Store.NO)")
     public String getParentId() {
         return parentId;
     }
@@ -25,6 +27,7 @@ public class IPdmModel {
         this.parentId = parentId;
     }
     @ProtoField(number = 2, required = true)
+    @ProtoDoc("@Field(index=Index.YES, analyze = Analyze.YES, store = Store.NO)")
     public String getChildId() {
         return childId;
     }
